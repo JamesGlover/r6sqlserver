@@ -13,3 +13,33 @@ However for the record this does two main things:
 2. Sets some bundler build flags, which ensure that the tiny_tds gem can actually
    find the brew libraries.
    `bundle config set build.tiny_tds --with-freetds-dir="\$(brew --prefix freetds)"`
+
+
+## Setting up the server
+
+We're going to be setting up a server using Docker. This is mostly reproducing
+the instructions from here:
+
+https://www.microsoft.com/en-us/sql-server/developer-get-started/ruby/mac/?rtc=1
+
+1. Download Docker https://hub.docker.com/editions/community/docker-ce-desktop-mac/
+2. Install it
+3. You'll need to temporarily elevate your privileges through self service,
+   and will likely need to ask systems to enable this for you. This prompt will
+   happen the first time you run 'Docker'
+3. Increase the available memory for docker to at least 4GB:
+
+   - Right click the docker icon in the menu bar
+   - Preferences
+   - Resources
+   - Memory
+   - Apply and restart
+
+4. `docker pull microsoft/mssql-server-linux:2017-latest`
+5. With a password in place of yourStrong(!)Password: `docker run -e 'HOMEBREW_NO_ENV_FILTERING=1' -e 'ACCEPT_EULA=Y' -e 'SA_PASSWORD=yourStrong(!)Password' -p 1433:1433 -d microsoft/mssql-server-linux`
+6. We're done! Now you just need to create the database:
+`SA_PASSWORD=yourStrong(!)Password bundle exec rake db:create`
+
+Probably a better way of handling the password there. I might be overlooking something, but it just seems to be
+protecting the SQL server database in your local docker cluster, which I *assume* is only accessible from
+localhost. No not sure why they put emphasis on its security.
