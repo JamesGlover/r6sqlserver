@@ -50,7 +50,7 @@ def set_bundler_build_flags
   print "Install bundler flags (This will replace existing tiny_tds flags)? Y/N > "
   response = gets.chomp
   if response == 'Y'
-    `bundle config set build.tiny_tds --with-freetds-dir="\$(brew --prefix freetds)"`
+    `bundle config set build.tiny_tds --with-freetds-dir="\\$(brew --prefix freetds)"`
   else
     puts "Some gems may refuse to install"
   end
